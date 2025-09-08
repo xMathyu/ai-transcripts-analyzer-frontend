@@ -1,36 +1,211 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Transcripts Analyzer Frontend
 
-## Getting Started
+Una interfaz web moderna para analizar y buscar transcripciones utilizando inteligencia artificial. Construida con Next.js, React y Tailwind CSS.
 
-First, run the development server:
+## Características
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 🔍 Búsqueda Avanzada
+- Búsqueda rápida por palabras clave
+- Filtros por categoría (problemas técnicos, facturación, soporte comercial, etc.)
+- Paginación de resultados
+- Puntuación de relevancia
+- Búsqueda local sin consumir tokens de IA
+
+### 📊 Análisis y Estadísticas
+- Dashboard con métricas del sistema
+- Estadísticas de uso de OpenAI
+- Análisis de rendimiento de caché
+- Temas más frecuentes por categoría
+- Visualización de datos interactiva
+
+### 📋 Gestión de Transcripciones
+- Lista completa de transcripciones
+- Filtros por categoría y búsqueda
+- Ordenamiento por diferentes criterios
+- Vista detallada de cada transcripción
+- Metadatos y información de sentimiento
+
+### 🎨 Interfaz Moderna
+- Diseño responsivo
+- Navegación intuitiva
+- Componentes reutilizables
+- Estados de carga y error
+- Modo claro optimizado
+
+## Tecnologías Utilizadas
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Estilos**: Tailwind CSS 4
+- **Estado**: React Hooks personalizados
+- **HTTP**: Fetch API nativo
+- **Linting**: ESLint con configuración Next.js
+
+## Instalación
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone <repository-url>
+   cd ai-transcripts-analyzer-frontend
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Edita `.env.local` con la URL de tu backend:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:3000
+   ```
+
+4. **Ejecutar en desarrollo**
+   ```bash
+   npm run dev
+   ```
+
+5. **Abrir en el navegador**
+   ```
+   http://localhost:3000
+   ```
+
+## Estructura del Proyecto
+
+```
+src/
+├── app/                    # Páginas de Next.js App Router
+│   ├── layout.tsx         # Layout principal
+│   ├── page.tsx           # Dashboard principal
+│   ├── search/            # Página de búsqueda
+│   ├── transcripts/       # Lista de transcripciones
+│   └── analytics/         # Página de análisis
+├── components/            # Componentes React
+│   ├── analytics/         # Componentes de análisis
+│   ├── layout/           # Componentes de navegación
+│   ├── search/           # Componentes de búsqueda
+│   ├── transcripts/      # Componentes de transcripciones
+│   └── ui/               # Componentes de UI reutilizables
+├── hooks/                # React Hooks personalizados
+├── services/             # Servicios de API
+└── types/                # Definiciones de TypeScript
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El frontend se conecta a una API NestJS que proporciona los siguientes endpoints:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Endpoints Principales
 
-## Learn More
+- `GET /api/transcripts/search` - Búsqueda de transcripciones
+- `GET /api/transcripts/statistics` - Estadísticas del sistema
+- `GET /api/transcripts/topics/frequent` - Temas más frecuentes
+- `GET /api/transcripts` - Lista de todas las transcripciones
+- `GET /api/transcripts/:id` - Transcripción específica
 
-To learn more about Next.js, take a look at the following resources:
+### Categorías de Transcripciones
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `technical_issues` - Problemas técnicos
+- `billing_issues` - Problemas de facturación
+- `commercial_support` - Soporte comercial
+- `administrative_requests` - Solicitudes administrativas
+- `service_activation` - Activación de servicios
+- `complaints` - Quejas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Desarrollo
 
-## Deploy on Vercel
+### Scripts Disponibles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # Servidor de desarrollo
+npm run build    # Construcción para producción
+npm run start    # Servidor de producción
+npm run lint     # Linting del código
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Estructura de Componentes
+
+#### Hooks Personalizados
+- `useSearch` - Manejo de búsquedas
+- `useTranscripts` - Lista de transcripciones
+- `useStatistics` - Estadísticas del sistema
+- `useFrequentTopics` - Temas frecuentes
+
+#### Componentes de UI
+- `LoadingSpinner` - Indicador de carga
+- `ErrorMessage` - Mensajes de error
+- `Badge` - Etiquetas de categorías
+- `Card` - Contenedor de contenido
+
+### Convenciones de Código
+
+- Usar TypeScript para tipado estático
+- Componentes funcionales con Hooks
+- Props interfaces definidas
+- Manejo de estados de carga y error
+- Comentarios en español para documentación
+
+## Configuración de Producción
+
+1. **Variables de entorno**
+   ```bash
+   NEXT_PUBLIC_API_URL=https://your-api-domain.com
+   ```
+
+2. **Construcción**
+   ```bash
+   npm run build
+   ```
+
+3. **Despliegue**
+   ```bash
+   npm run start
+   ```
+
+## Características Principales
+
+### Dashboard
+- Resumen de estadísticas del sistema
+- Búsqueda rápida
+- Temas trending
+- Métricas de rendimiento
+
+### Búsqueda Avanzada
+- Búsqueda por palabras clave
+- Filtros por categoría
+- Resultados paginados
+- Mensajes coincidentes destacados
+
+### Analytics
+- Estadísticas de transcripciones
+- Uso de tokens de OpenAI
+- Rendimiento de caché
+- Análisis de temas por categoría
+
+### Lista de Transcripciones
+- Vista completa de transcripciones
+- Filtros y ordenamiento
+- Búsqueda en tiempo real
+- Metadatos detallados
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Soporte
+
+Para soporte o preguntas, puedes:
+- Abrir un issue en GitHub
+- Contactar al equipo de desarrollo
+- Revisar la documentación del backend

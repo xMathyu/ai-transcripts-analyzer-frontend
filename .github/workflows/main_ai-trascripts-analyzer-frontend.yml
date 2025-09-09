@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: "22.x"
 
       - name: npm install, build, and test
         run: |
@@ -47,7 +47,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+
+      - name: Install dependencies for production
+        run: npm ci --omit=dev
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -55,11 +58,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D0F93D12DD3D451FBFBCA5175EA9B03E }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5CEB93400DE04E75AA8F29910C6C868C }}
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+      - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'ai-trascripts-analyzer-frontend'
-          slot-name: 'Production'
+          app-name: "ai-trascripts-analyzer-frontend"
+          slot-name: "Production"
           package: .
-          

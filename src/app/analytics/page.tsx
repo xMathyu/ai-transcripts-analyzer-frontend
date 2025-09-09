@@ -9,8 +9,8 @@ export default function AnalyticsPage() {
     <div className="space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
+        <p className="mt-2 text-muted-foreground">
           Comprehensive analytics and insights about your transcript data, AI
           usage, and system performance.
         </p>
@@ -18,7 +18,7 @@ export default function AnalyticsPage() {
 
       {/* Statistics Section */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
           System Statistics
         </h2>
         <StatisticsPanel />
@@ -26,7 +26,7 @@ export default function AnalyticsPage() {
 
       {/* Topics Analysis */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
           Topic Analysis
         </h2>
         <FrequentTopics />

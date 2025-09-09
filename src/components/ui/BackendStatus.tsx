@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card } from "@/components/ui/common";
+import { Card } from "@/components/ui/Card";
 
 export function BackendStatus() {
   const [isOnline, setIsOnline] = React.useState<boolean | null>(null);

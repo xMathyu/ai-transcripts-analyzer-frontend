@@ -8,8 +8,8 @@ export default function TranscriptsPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">All Transcripts</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground">All Transcripts</h1>
+        <p className="mt-2 text-muted-foreground">
           Browse, filter, and manage all available transcripts in your system.
         </p>
       </div>

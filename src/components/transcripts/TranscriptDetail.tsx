@@ -3,12 +3,9 @@
 import React from "react";
 import { useTranscript } from "@/hooks/useTranscripts";
 import { TranscriptCategory } from "@/types/transcript";
-import {
-  LoadingSpinner,
-  ErrorMessage,
-  Badge,
-  Card,
-} from "@/components/ui/common";
+import { LoadingSpinner, ErrorMessage } from "@/components/ui/common";
+import { Badge } from "@/components/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { TranscriptAIActions } from "@/components/ai/TranscriptAIActions";
 
 interface TranscriptDetailProps {
@@ -32,12 +29,12 @@ export function TranscriptDetail({ transcriptId }: TranscriptDetailProps) {
 
   const getBadgeVariant = (category: TranscriptCategory) => {
     const variants = {
-      [TranscriptCategory.TECHNICAL_ISSUES]: "danger" as const,
+      [TranscriptCategory.TECHNICAL_ISSUES]: "destructive" as const,
       [TranscriptCategory.BILLING_ISSUES]: "warning" as const,
       [TranscriptCategory.COMMERCIAL_SUPPORT]: "success" as const,
       [TranscriptCategory.ADMINISTRATIVE_REQUESTS]: "secondary" as const,
       [TranscriptCategory.SERVICE_ACTIVATION]: "default" as const,
-      [TranscriptCategory.COMPLAINTS_CLAIMS]: "danger" as const,
+      [TranscriptCategory.COMPLAINTS_CLAIMS]: "destructive" as const,
     };
     return variants[category];
   };
@@ -45,40 +42,55 @@ export function TranscriptDetail({ transcriptId }: TranscriptDetailProps) {
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment?.toLowerCase()) {
       case "positive":
-        return "text-green-600";
+        return "text-green-600 dark:text-green-400";
       case "negative":
-        return "text-red-600";
+        return "text-red-600 dark:text-red-400";
       case "neutral":
-        return "text-gray-600";
+        return "text-muted-foreground";
       default:
-        return "text-gray-600";
+        return "text-muted-foreground";
     }
   };
 
   if (loading) {
     return (
-      <Card title="Loading Transcript...">
-        <div className="flex justify-center py-8">
-          <LoadingSpinner size="lg" />
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Loading Transcript...</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center py-8">
+            <LoadingSpinner size="lg" />
+          </div>
+        </CardContent>
       </Card>
     );
   }
 
   if (error) {
     return (
-      <Card title="Transcript Detail">
-        <ErrorMessage message={error} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Transcript Detail</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ErrorMessage message={error} />
+        </CardContent>
       </Card>
     );
   }
 
   if (!transcript) {
     return (
-      <Card title="Transcript Not Found">
-        <div className="text-center py-8 text-gray-500">
-          The requested transcript could not be found.
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Transcript Not Found</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            The requested transcript could not be found.
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -86,96 +98,122 @@ export function TranscriptDetail({ transcriptId }: TranscriptDetailProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card title={transcript.fileName} subtitle={`ID: ${transcript.id}`}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <div>
-            <div className="text-sm text-gray-500">Category</div>
-            <Badge variant={getBadgeVariant(transcript.category)}>
-              {getCategoryLabel(transcript.category)}
-            </Badge>
-          </div>
-          <div>
-            <div className="text-sm text-gray-500">Duration</div>
-            <div className="font-medium">{transcript.duration}</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-500">Messages</div>
-            <div className="font-medium">{transcript.messages.length}</div>
-          </div>
-          {transcript.sentiment && (
+      <Card>
+        <CardHeader>
+          <CardTitle>{transcript.fileName}</CardTitle>
+          <p className="text-sm text-muted-foreground">ID: {transcript.id}</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div>
-              <div className="text-sm text-gray-500">Sentiment</div>
-              <div
-                className={`font-medium capitalize ${getSentimentColor(
-                  transcript.sentiment
-                )}`}
-              >
-                {transcript.sentiment}
+              <div className="text-sm text-muted-foreground">Category</div>
+              <Badge variant={getBadgeVariant(transcript.category)}>
+                {getCategoryLabel(transcript.category)}
+              </Badge>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Duration</div>
+              <div className="font-medium text-foreground">
+                {transcript.duration}
+              </div>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Messages</div>
+              <div className="font-medium text-foreground">
+                {transcript.messages.length}
+              </div>
+            </div>
+            {transcript.sentiment && (
+              <div>
+                <div className="text-sm text-muted-foreground">Sentiment</div>
+                <div
+                  className={`font-medium capitalize ${getSentimentColor(
+                    transcript.sentiment
+                  )}`}
+                >
+                  {transcript.sentiment}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <h4 className="text-sm font-medium text-foreground mb-2">
+              Summary
+            </h4>
+            <p className="text-foreground">{transcript.summary}</p>
+          </div>
+
+          {transcript.topics && transcript.topics.length > 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-foreground mb-2">
+                Topics
+              </h4>
+              <div className="flex flex-wrap gap-1">
+                {transcript.topics.map((topic) => (
+                  <Badge key={topic} variant="secondary">
+                    {topic}
+                  </Badge>
+                ))}
               </div>
             </div>
           )}
-        </div>
-
-        <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Summary</h4>
-          <p className="text-gray-800">{transcript.summary}</p>
-        </div>
-
-        {transcript.topics && transcript.topics.length > 0 && (
-          <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Topics</h4>
-            <div className="flex flex-wrap gap-1">
-              {transcript.topics.map((topic) => (
-                <Badge key={topic} variant="secondary" size="sm">
-                  {topic}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
+        </CardContent>
       </Card>
 
       {/* Messages */}
-      <Card
-        title="Conversation"
-        subtitle={`${transcript.messages.length} messages`}
-      >
-        <div className="space-y-4">
-          {transcript.messages.map((message, index) => (
-            <div
-              key={index}
-              className="border-b border-gray-100 pb-4 last:border-b-0"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <Badge
-                    variant={
-                      message.speaker === "AGENT" ? "secondary" : "default"
-                    }
-                    size="sm"
-                  >
-                    {message.speaker}
-                  </Badge>
-                  <span className="text-sm text-gray-500">
-                    {message.timestamp}
-                  </span>
+      <Card>
+        <CardHeader>
+          <CardTitle>Conversation</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            {transcript.messages.length} messages
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {transcript.messages.map((message, index) => (
+              <div
+                key={index}
+                className="border-b border-border pb-4 last:border-b-0"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <Badge
+                      variant={
+                        message.speaker === "AGENT" ? "secondary" : "default"
+                      }
+                    >
+                      {message.speaker}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {message.timestamp}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-foreground leading-relaxed">
+                  {message.content}
                 </div>
               </div>
-              <div className="text-gray-800 leading-relaxed">
-                {message.content}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </CardContent>
       </Card>
 
       {/* AI Actions */}
-      <Card title="AI Analysis" subtitle="Use AI to analyze this transcript">
-        <TranscriptAIActions
-          transcriptId={transcript.id}
-          currentCategory={transcript.category}
-          currentSummary={transcript.summary}
-        />
+      <Card>
+        <CardHeader>
+          <CardTitle>AI Analysis</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Use AI to analyze this transcript
+          </p>
+        </CardHeader>
+        <CardContent>
+          <TranscriptAIActions
+            transcriptId={transcript.id}
+            currentCategory={transcript.category}
+            currentSummary={transcript.summary}
+          />
+        </CardContent>
       </Card>
     </div>
   );

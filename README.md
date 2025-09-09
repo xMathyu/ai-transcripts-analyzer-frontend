@@ -1,211 +1,211 @@
 # AI Transcripts Analyzer Frontend
 
-Una interfaz web moderna para analizar y buscar transcripciones utilizando inteligencia artificial. Construida con Next.js, React y Tailwind CSS.
+A modern web interface for analyzing and searching transcriptions using artificial intelligence. Built with Next.js, React, and Tailwind CSS.
 
-## Características
+## Features
 
-### 🔍 Búsqueda Avanzada
-- Búsqueda rápida por palabras clave
-- Filtros por categoría (problemas técnicos, facturación, soporte comercial, etc.)
-- Paginación de resultados
-- Puntuación de relevancia
-- Búsqueda local sin consumir tokens de IA
+### 🔍 Advanced Search
+- Fast keyword search
+- Category filters (technical issues, billing, commercial support, etc.)
+- Result pagination
+- Relevance scoring
+- Local search without consuming AI tokens
 
-### 📊 Análisis y Estadísticas
-- Dashboard con métricas del sistema
-- Estadísticas de uso de OpenAI
-- Análisis de rendimiento de caché
-- Temas más frecuentes por categoría
-- Visualización de datos interactiva
+### 📊 Analytics and Statistics
+- Dashboard with system metrics
+- OpenAI usage statistics
+- Cache performance analysis
+- Most frequent topics by category
+- Interactive data visualization
 
-### 📋 Gestión de Transcripciones
-- Lista completa de transcripciones
-- Filtros por categoría y búsqueda
-- Ordenamiento por diferentes criterios
-- Vista detallada de cada transcripción
-- Metadatos y información de sentimiento
+### 📋 Transcript Management
+- Complete transcript listing
+- Category and search filters
+- Sorting by different criteria
+- Detailed view of each transcript
+- Metadata and sentiment information
 
-### 🎨 Interfaz Moderna
-- Diseño responsivo
-- Navegación intuitiva
-- Componentes reutilizables
-- Estados de carga y error
-- Modo claro optimizado
+### 🎨 Modern Interface
+- Responsive design
+- Intuitive navigation
+- Reusable components
+- Loading and error states
+- Optimized light mode
 
-## Tecnologías Utilizadas
+## Technologies Used
 
 - **Frontend**: Next.js 15, React 19, TypeScript
-- **Estilos**: Tailwind CSS 4
-- **Estado**: React Hooks personalizados
-- **HTTP**: Fetch API nativo
-- **Linting**: ESLint con configuración Next.js
+- **Styling**: Tailwind CSS 4
+- **State**: Custom React Hooks
+- **HTTP**: Native Fetch API
+- **Linting**: ESLint with Next.js configuration
 
-## Instalación
+## Installation
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
    ```bash
    git clone <repository-url>
    cd ai-transcripts-analyzer-frontend
    ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Configurar variables de entorno**
+3. **Configure environment variables**
    ```bash
    cp .env.example .env.local
    ```
    
-   Edita `.env.local` con la URL de tu backend:
+   Edit `.env.local` with your backend URL:
    ```
    NEXT_PUBLIC_API_URL=http://localhost:3000
    ```
 
-4. **Ejecutar en desarrollo**
+4. **Run in development**
    ```bash
    npm run dev
    ```
 
-5. **Abrir en el navegador**
+5. **Open in browser**
    ```
    http://localhost:3000
    ```
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 src/
-├── app/                    # Páginas de Next.js App Router
-│   ├── layout.tsx         # Layout principal
-│   ├── page.tsx           # Dashboard principal
-│   ├── search/            # Página de búsqueda
-│   ├── transcripts/       # Lista de transcripciones
-│   └── analytics/         # Página de análisis
-├── components/            # Componentes React
-│   ├── analytics/         # Componentes de análisis
-│   ├── layout/           # Componentes de navegación
-│   ├── search/           # Componentes de búsqueda
-│   ├── transcripts/      # Componentes de transcripciones
-│   └── ui/               # Componentes de UI reutilizables
-├── hooks/                # React Hooks personalizados
-├── services/             # Servicios de API
-└── types/                # Definiciones de TypeScript
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx         # Main layout
+│   ├── page.tsx           # Main dashboard
+│   ├── search/            # Search page
+│   ├── transcripts/       # Transcripts list
+│   └── analytics/         # Analytics page
+├── components/            # React components
+│   ├── analytics/         # Analytics components
+│   ├── layout/           # Navigation components
+│   ├── search/           # Search components
+│   ├── transcripts/      # Transcript components
+│   └── ui/               # Reusable UI components
+├── hooks/                # Custom React Hooks
+├── services/             # API services
+└── types/                # TypeScript definitions
 ```
 
-## API Backend
+## Backend API
 
-El frontend se conecta a una API NestJS que proporciona los siguientes endpoints:
+The frontend connects to a NestJS API that provides the following endpoints:
 
-### Endpoints Principales
+### Main Endpoints
 
-- `GET /api/transcripts/search` - Búsqueda de transcripciones
-- `GET /api/transcripts/statistics` - Estadísticas del sistema
-- `GET /api/transcripts/topics/frequent` - Temas más frecuentes
-- `GET /api/transcripts` - Lista de todas las transcripciones
-- `GET /api/transcripts/:id` - Transcripción específica
+- `GET /api/transcripts/search` - Search transcripts
+- `GET /api/transcripts/statistics` - System statistics
+- `GET /api/transcripts/topics/frequent` - Most frequent topics
+- `GET /api/transcripts` - List all transcripts
+- `GET /api/transcripts/:id` - Specific transcript
 
-### Categorías de Transcripciones
+### Transcript Categories
 
-- `technical_issues` - Problemas técnicos
-- `billing_issues` - Problemas de facturación
-- `commercial_support` - Soporte comercial
-- `administrative_requests` - Solicitudes administrativas
-- `service_activation` - Activación de servicios
-- `complaints` - Quejas
+- `technical_issues` - Technical issues
+- `billing_issues` - Billing issues
+- `commercial_support` - Commercial support
+- `administrative_requests` - Administrative requests
+- `service_activation` - Service activation
+- `complaints` - Complaints
 
-## Desarrollo
+## Development
 
-### Scripts Disponibles
+### Available Scripts
 
 ```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Construcción para producción
-npm run start    # Servidor de producción
-npm run lint     # Linting del código
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Production server
+npm run lint     # Code linting
 ```
 
-### Estructura de Componentes
+### Component Structure
 
-#### Hooks Personalizados
-- `useSearch` - Manejo de búsquedas
-- `useTranscripts` - Lista de transcripciones
-- `useStatistics` - Estadísticas del sistema
-- `useFrequentTopics` - Temas frecuentes
+#### Custom Hooks
+- `useSearch` - Search management
+- `useTranscripts` - Transcript listing
+- `useStatistics` - System statistics
+- `useFrequentTopics` - Frequent topics
 
-#### Componentes de UI
-- `LoadingSpinner` - Indicador de carga
-- `ErrorMessage` - Mensajes de error
-- `Badge` - Etiquetas de categorías
-- `Card` - Contenedor de contenido
+#### UI Components
+- `LoadingSpinner` - Loading indicator
+- `ErrorMessage` - Error messages
+- `Badge` - Category labels
+- `Card` - Content container
 
-### Convenciones de Código
+### Code Conventions
 
-- Usar TypeScript para tipado estático
-- Componentes funcionales con Hooks
-- Props interfaces definidas
-- Manejo de estados de carga y error
-- Comentarios en español para documentación
+- Use TypeScript for static typing
+- Functional components with Hooks
+- Defined Props interfaces
+- Loading and error state handling
+- Comments in English for documentation
 
-## Configuración de Producción
+## Production Configuration
 
-1. **Variables de entorno**
+1. **Environment variables**
    ```bash
    NEXT_PUBLIC_API_URL=https://your-api-domain.com
    ```
 
-2. **Construcción**
+2. **Build**
    ```bash
    npm run build
    ```
 
-3. **Despliegue**
+3. **Deploy**
    ```bash
    npm run start
    ```
 
-## Características Principales
+## Key Features
 
 ### Dashboard
-- Resumen de estadísticas del sistema
-- Búsqueda rápida
-- Temas trending
-- Métricas de rendimiento
+- System statistics overview
+- Quick search
+- Trending topics
+- Performance metrics
 
-### Búsqueda Avanzada
-- Búsqueda por palabras clave
-- Filtros por categoría
-- Resultados paginados
-- Mensajes coincidentes destacados
+### Advanced Search
+- Keyword search
+- Category filters
+- Paginated results
+- Highlighted matching messages
 
 ### Analytics
-- Estadísticas de transcripciones
-- Uso de tokens de OpenAI
-- Rendimiento de caché
-- Análisis de temas por categoría
+- Transcript statistics
+- OpenAI token usage
+- Cache performance
+- Topic analysis by category
 
-### Lista de Transcripciones
-- Vista completa de transcripciones
-- Filtros y ordenamiento
-- Búsqueda en tiempo real
-- Metadatos detallados
+### Transcript List
+- Complete transcript view
+- Filters and sorting
+- Real-time search
+- Detailed metadata
 
-## Contribución
+## Contributing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Licencia
+## License
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Soporte
+## Support
 
-Para soporte o preguntas, puedes:
-- Abrir un issue en GitHub
-- Contactar al equipo de desarrollo
-- Revisar la documentación del backend
+For support or questions, you can:
+- Open an issue on GitHub
+- Contact the development team
+- Review the backend documentation

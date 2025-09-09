@@ -23,7 +23,6 @@ export function SearchForm() {
     useAIClassification();
 
   const handleClassify = (transcriptId: string) => {
-    console.log("Starting classification for:", transcriptId);
     setClassifyingId(transcriptId);
     classifyTranscript(transcriptId);
   };
@@ -33,19 +32,14 @@ export function SearchForm() {
       classificationResult &&
       classificationResult.transcriptId === classifyingId
     ) {
-      console.log("Saving classification:", classificationResult);
-      setLocalClassifications((prev) => {
-        const newState = {
-          ...prev,
-          [classificationResult.transcriptId]: {
-            category: classificationResult.category,
-            confidence: classificationResult.confidence,
-            reasoning: classificationResult.reasoning,
-          },
-        };
-        console.log("Updated local classifications:", newState);
-        return newState;
-      });
+      setLocalClassifications((prev) => ({
+        ...prev,
+        [classificationResult.transcriptId]: {
+          category: classificationResult.category,
+          confidence: classificationResult.confidence,
+          reasoning: classificationResult.reasoning,
+        },
+      }));
       setClassifyingId(null);
     }
   }, [classificationResult, classifyingId]);
@@ -56,10 +50,6 @@ export function SearchForm() {
   }) => {
     const localClassification = localClassifications[transcript.id];
     if (localClassification) {
-      console.log(
-        `Found local classification for ${transcript.id}:`,
-        localClassification.category
-      );
       return localClassification.category;
     }
 
@@ -118,6 +108,14 @@ export function SearchForm() {
       complaints_claims: "danger",
     };
     return variants[category] || "secondary";
+  };
+
+  const formatRelevanceScore = (score: number) => {
+    if (score > 1) {
+      return Math.round(score);
+    } else {
+      return Math.round(score * 100);
+    }
   };
 
   return (
@@ -217,7 +215,8 @@ export function SearchForm() {
                         Duration: {result.transcript.duration}
                       </span>
                       <span className="text-sm text-gray-500">
-                        Relevance: {(result.relevanceScore * 100).toFixed(0)}%
+                        Relevance: {formatRelevanceScore(result.relevanceScore)}
+                        %
                       </span>
                     </div>
                   </div>

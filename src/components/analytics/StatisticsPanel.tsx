@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useStatistics } from "@/hooks/useTranscripts";
 import { LoadingSpinner, ErrorMessage, Card } from "@/components/ui/common";
 
 export function StatisticsPanel() {
-  const { statistics, loading, error } = useStatistics();
+  const { statistics, loading, error, refreshStatistics } = useStatistics();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshStatistics();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refreshStatistics]);
 
   if (loading) {
     return (
@@ -30,18 +38,25 @@ export function StatisticsPanel() {
   }
 
   const formatCurrency = (amount: number) => {
+    if (amount < 0.01 && amount > 0) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 6,
+        maximumFractionDigits: 6,
+      }).format(amount);
+    }
+
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
     }).format(amount);
   };
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat("en-US").format(num);
-  };
-
-  const formatPercentage = (num: number) => {
-    return `${(num * 100).toFixed(1)}%`;
   };
 
   const formatMemory = (bytes: number) => {
@@ -57,30 +72,30 @@ export function StatisticsPanel() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="text-2xl font-bold text-blue-600">
-                {statistics.transcripts.total}
+                {statistics.transcripts.totalTranscripts}
               </div>
               <div className="text-sm text-gray-500">Total Transcripts</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-green-600">
-                {statistics.transcripts.categorized}
+                {statistics.transcripts.totalTranscripts -
+                  (statistics.transcripts.categoriesDistribution
+                    ?.unclassified || 0)}
               </div>
               <div className="text-sm text-gray-500">Categorized</div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <div className="text-lg font-semibold text-gray-700">
-                {statistics.transcripts.averageMessageCount}
+                {Math.round(
+                  statistics.transcripts.averageMessagesPerTranscript
+                )}
               </div>
-              <div className="text-sm text-gray-500">Avg Messages</div>
-            </div>
-            <div>
-              <div className="text-lg font-semibold text-gray-700">
-                {statistics.transcripts.averageDuration}
+              <div className="text-sm text-gray-500">
+                Avg Messages per Transcript
               </div>
-              <div className="text-sm text-gray-500">Avg Duration</div>
             </div>
           </div>
 
@@ -89,21 +104,18 @@ export function StatisticsPanel() {
               By Category
             </h4>
             <div className="space-y-1">
-              {statistics.transcripts.byCategory &&
-                Object.entries(statistics.transcripts.byCategory).map(
-                  ([category, count]) => (
-                    <div
-                      key={category}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="text-gray-600 capitalize">
-                        {category.replace("_", " ")}
-                      </span>
-                      <span className="font-medium">{count}</span>
-                    </div>
-                  )
-                )}
-              {!statistics.transcripts.byCategory && (
+              {statistics.transcripts.categoriesDistribution &&
+                Object.entries(
+                  statistics.transcripts.categoriesDistribution
+                ).map(([category, count]) => (
+                  <div key={category} className="flex justify-between text-sm">
+                    <span className="text-gray-600 capitalize">
+                      {category.replace(/_/g, " ")}
+                    </span>
+                    <span className="font-medium">{count as number}</span>
+                  </div>
+                ))}
+              {!statistics.transcripts.categoriesDistribution && (
                 <div className="text-sm text-gray-500">
                   No category data available
                 </div>
@@ -174,7 +186,7 @@ export function StatisticsPanel() {
       </Card>
 
       {/* Cache Statistics */}
-      <Card title="Cache Performance" subtitle="System cache metrics">
+      <Card title="Cache Status" subtitle="System cache metrics">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -184,49 +196,44 @@ export function StatisticsPanel() {
               <div className="text-sm text-gray-500">Cache Entries</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-green-600">
-                {formatPercentage(statistics.cache.hitRate)}
+              <div className="text-2xl font-bold text-purple-600">
+                {formatMemory(statistics.cache.memoryUsageEstimate)}
               </div>
-              <div className="text-sm text-gray-500">Hit Rate</div>
+              <div className="text-sm text-gray-500">Memory Usage</div>
             </div>
           </div>
 
+          {/* Cache Keys Preview */}
           <div>
-            <div className="text-lg font-semibold text-gray-700">
-              {formatMemory(statistics.cache.memoryUsageEstimate)}
+            <h4 className="text-sm font-medium text-gray-700 mb-2">
+              Recent Cache Keys
+            </h4>
+            <div className="bg-gray-50 rounded-md p-3 max-h-32 overflow-y-auto">
+              <div className="space-y-1">
+                {statistics.cache.keys.slice(0, 5).map((key, index) => (
+                  <div
+                    key={index}
+                    className="text-xs text-gray-600 truncate"
+                    title={key}
+                  >
+                    {key}
+                  </div>
+                ))}
+                {statistics.cache.keys.length > 5 && (
+                  <div className="text-xs text-gray-500 italic">
+                    ... and {statistics.cache.keys.length - 5} more
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-sm text-gray-500">Memory Usage</div>
           </div>
 
-          {/* Hit Rate Visual */}
-          <div>
-            <div className="text-sm text-gray-700 mb-1">Cache Efficiency</div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-green-500 h-2 rounded-full"
-                style={{
-                  width: `${statistics.cache.hitRate * 100}%`,
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Performance Indicator */}
-          <div className="p-3 bg-gray-50 rounded-md">
+          {/* Cache Status */}
+          <div className="p-3 bg-blue-50 rounded-md">
             <div className="text-sm">
-              {statistics.cache.hitRate > 0.8 ? (
-                <span className="text-green-600 font-medium">
-                  ✓ Excellent cache performance
-                </span>
-              ) : statistics.cache.hitRate > 0.6 ? (
-                <span className="text-yellow-600 font-medium">
-                  ⚠ Good cache performance
-                </span>
-              ) : (
-                <span className="text-red-600 font-medium">
-                  ⚠ Consider cache optimization
-                </span>
-              )}
+              <span className="text-blue-600 font-medium">
+                ℹ Active caching for search, AI operations, and topics
+              </span>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { transcriptService } from "@/services/transcript.service";
 import {
   SearchResult,
@@ -92,24 +92,26 @@ export function useStatistics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        const response = await transcriptService.getStatistics();
-        setStatistics(response.data || null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch statistics"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStatistics();
+  const fetchStatistics = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await transcriptService.getStatistics();
+      setStatistics(response.data || null);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch statistics"
+      );
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { statistics, loading, error };
+  useEffect(() => {
+    fetchStatistics();
+  }, [fetchStatistics]);
+
+  return { statistics, loading, error, refreshStatistics: fetchStatistics };
 }
 
 export function useFrequentTopics(category?: TranscriptCategory) {

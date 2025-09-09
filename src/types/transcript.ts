@@ -103,11 +103,9 @@ export interface SummaryResult {
 
 export interface Statistics {
   transcripts: {
-    total: number;
-    categorized: number;
-    byCategory: Record<string, number> | null;
-    averageMessageCount: number;
-    averageDuration: string;
+    totalTranscripts: number;
+    categoriesDistribution: Record<string, number>;
+    averageMessagesPerTranscript: number;
   };
   openAiUsage: {
     tokenUsage: {
@@ -120,7 +118,7 @@ export interface Statistics {
   };
   cache: {
     size: number;
-    hitRate: number;
+    keys: string[];
     memoryUsageEstimate: number;
   };
 }

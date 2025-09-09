@@ -117,7 +117,7 @@ export function TranscriptsList() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search transcripts..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -134,7 +134,7 @@ export function TranscriptsList() {
               onChange={(e) =>
                 setFilterCategory(e.target.value as TranscriptCategory | "")
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">All Categories</option>
               {Object.values(TranscriptCategory).map((cat) => (
@@ -160,7 +160,7 @@ export function TranscriptsList() {
                   e.target.value as "fileName" | "duration" | "messageCount"
                 )
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="fileName">File Name</option>
               <option value="duration">Duration</option>

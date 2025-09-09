@@ -65,7 +65,7 @@ export function FrequentTopics() {
                 (e.target.value as TranscriptCategory) || undefined
               )
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">All Categories</option>
             {Object.values(TranscriptCategory).map((cat) => (

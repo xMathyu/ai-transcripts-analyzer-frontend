@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TranscriptCategory } from "@/types/transcript";
 import { useSearch } from "@/hooks/useTranscripts";
+import { useAIClassification } from "@/hooks/useAI";
 import {
   LoadingSpinner,
   ErrorMessage,
@@ -13,7 +14,68 @@ import {
 export function SearchForm() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<TranscriptCategory | "">("");
+  const [classifyingId, setClassifyingId] = useState<string | null>(null);
+  const [localClassifications, setLocalClassifications] = useState<
+    Record<string, { category: string; confidence: number; reasoning: string }>
+  >({});
   const { results, loading, error, pagination, search } = useSearch();
+  const { classifyTranscript, result: classificationResult } =
+    useAIClassification();
+
+  const handleClassify = (transcriptId: string) => {
+    console.log("Starting classification for:", transcriptId);
+    setClassifyingId(transcriptId);
+    classifyTranscript(transcriptId);
+  };
+
+  useEffect(() => {
+    if (
+      classificationResult &&
+      classificationResult.transcriptId === classifyingId
+    ) {
+      console.log("Saving classification:", classificationResult);
+      setLocalClassifications((prev) => {
+        const newState = {
+          ...prev,
+          [classificationResult.transcriptId]: {
+            category: classificationResult.category,
+            confidence: classificationResult.confidence,
+            reasoning: classificationResult.reasoning,
+          },
+        };
+        console.log("Updated local classifications:", newState);
+        return newState;
+      });
+      setClassifyingId(null);
+    }
+  }, [classificationResult, classifyingId]);
+
+  const getTranscriptCategory = (transcript: {
+    id: string;
+    category?: string;
+  }) => {
+    const localClassification = localClassifications[transcript.id];
+    if (localClassification) {
+      console.log(
+        `Found local classification for ${transcript.id}:`,
+        localClassification.category
+      );
+      return localClassification.category;
+    }
+
+    if (transcript.category) {
+      return transcript.category;
+    }
+    return null;
+  };
+
+  const needsClassification = (transcript: {
+    id: string;
+    category?: string;
+  }) => {
+    const currentCategory = getTranscriptCategory(transcript);
+    return !currentCategory || currentCategory === "uncategorized";
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +140,7 @@ export function SearchForm() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter keywords to search for..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
@@ -96,7 +158,7 @@ export function SearchForm() {
               onChange={(e) =>
                 setCategory(e.target.value as TranscriptCategory | "")
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">All Categories</option>
               {Object.values(TranscriptCategory).map((cat) => (
@@ -143,9 +205,13 @@ export function SearchForm() {
                     </h4>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge
-                        variant={getBadgeVariant(result.transcript.category)}
+                        variant={getBadgeVariant(
+                          getTranscriptCategory(result.transcript) || undefined
+                        )}
                       >
-                        {getCategoryLabel(result.transcript.category)}
+                        {getCategoryLabel(
+                          getTranscriptCategory(result.transcript) || undefined
+                        )}
                       </Badge>
                       <span className="text-sm text-gray-500">
                         Duration: {result.transcript.duration}
@@ -155,11 +221,55 @@ export function SearchForm() {
                       </span>
                     </div>
                   </div>
+
+                  {needsClassification(result.transcript) && (
+                    <div className="flex-shrink-0 ml-4">
+                      <button
+                        onClick={() => handleClassify(result.transcript.id)}
+                        disabled={classifyingId === result.transcript.id}
+                        className="bg-purple-600 text-white px-3 py-1 rounded-md text-sm hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                      >
+                        {classifyingId === result.transcript.id ? (
+                          <>
+                            <LoadingSpinner size="sm" className="mr-1" />
+                            Classifying...
+                          </>
+                        ) : (
+                          "Classify"
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <p className="text-gray-700 mb-3">
                   {result.transcript.summary}
                 </p>
+
+                {/* Mostrar resultado de clasificación local si está disponible */}
+                {localClassifications[result.transcript.id] && (
+                  <div className="bg-purple-50 border border-purple-200 rounded-md p-3 mb-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="secondary">
+                        New Classification:{" "}
+                        {getCategoryLabel(
+                          localClassifications[result.transcript.id].category
+                        )}
+                      </Badge>
+                      <span className="text-sm text-purple-600">
+                        Confidence:{" "}
+                        {(
+                          localClassifications[result.transcript.id]
+                            .confidence * 100
+                        ).toFixed(1)}
+                        %
+                      </span>
+                    </div>
+                    <p className="text-sm text-purple-700">
+                      {localClassifications[result.transcript.id].reasoning}
+                    </p>
+                  </div>
+                )}
 
                 {result.transcript.topics &&
                   result.transcript.topics.length > 0 && (
@@ -213,7 +323,7 @@ export function SearchForm() {
                     })
                   }
                   disabled={pagination.page <= 1 || loading}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -227,7 +337,7 @@ export function SearchForm() {
                     })
                   }
                   disabled={pagination.page >= pagination.totalPages || loading}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

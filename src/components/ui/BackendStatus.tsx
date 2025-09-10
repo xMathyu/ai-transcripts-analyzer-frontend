@@ -12,7 +12,8 @@ export function BackendStatus() {
       try {
         const response = await fetch(
           `${
-            process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+            process.env.NEXT_PUBLIC_API_URL ||
+            "https://ai-transcripts-analyzer-backend.azurewebsites.net"
           }/api/transcripts/statistics`
         );
         setIsOnline(response.ok);
@@ -51,7 +52,8 @@ export function BackendStatus() {
               Cannot connect to the API server. Please ensure your backend is
               running on{" "}
               <code className="bg-red-100 px-1 rounded">
-                {process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}
+                {process.env.NEXT_PUBLIC_API_URL ||
+                  "https://ai-transcripts-analyzer-backend.azurewebsites.net"}
               </code>
             </p>
           </div>

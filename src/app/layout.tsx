@@ -27,7 +27,9 @@ export default function RootLayout({
 }>) {
   // Runtime configuration for Azure App Service
   const runtimeConfig = {
-    apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+    apiUrl:
+      process.env.NEXT_PUBLIC_API_URL ||
+      "https://ai-transcripts-analyzer-backend.azurewebsites.net",
   };
 
   console.log("Layout - Runtime config:", runtimeConfig);

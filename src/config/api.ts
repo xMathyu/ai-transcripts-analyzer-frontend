@@ -17,11 +17,13 @@ export const getApiBaseUrl = (): string => {
     }
 
     console.log("Using default localhost API URL");
-    return "http://localhost:3000";
+    return "https://ai-transcripts-analyzer-backend.azurewebsites.net";
   }
 
   // In server environment
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const apiUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://ai-transcripts-analyzer-backend.azurewebsites.net";
 
   console.log("Server-side API URL:", apiUrl);
   return apiUrl;

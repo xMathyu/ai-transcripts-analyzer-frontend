@@ -25,9 +25,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Runtime configuration for Azure App Service
   const runtimeConfig = {
     apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
   };
+
+  console.log("Layout - Runtime config:", runtimeConfig);
 
   return (
     <html lang="en" suppressHydrationWarning>

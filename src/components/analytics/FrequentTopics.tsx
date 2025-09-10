@@ -91,7 +91,7 @@ export function FrequentTopics() {
 
           {!loading && !error && topics.length > 0 && (
             <div className="space-y-3">
-              {topics.map((topic, index) => (
+              {topics.map((topic) => (
                 <div
                   key={topic.topic}
                   className="border border-border rounded-lg p-4"

@@ -34,7 +34,7 @@ if not exist ".env.local" (
 )
 
 echo ✅ Setup complete!
-echo 🌐 Backend API configured for: http://localhost:3000
+echo 🌐 Backend API configured for: https://ai-transcripts-analyzer-backend.azurewebsites.net
 echo.
 echo To start the development server, run:
 echo npm run dev
@@ -42,5 +42,5 @@ echo.
 echo To build for production, run:
 echo npm run build
 echo.
-echo 📚 Visit http://localhost:3000 once the dev server is running
+echo 📚 Visit https://ai-transcripts-analyzer-backend.azurewebsites.net once the dev server is running
 pause

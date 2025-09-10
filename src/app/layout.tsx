@@ -25,13 +25,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Runtime configuration for Azure App Service
+  // Runtime configuration - Force Azure URL in production
+  const isProduction = process.env.NODE_ENV === "production";
   const runtimeConfig = {
-    apiUrl:
-      process.env.NEXT_PUBLIC_API_URL ||
-      "https://ai-transcripts-analyzer-backend.azurewebsites.net",
+    apiUrl: isProduction
+      ? "https://ai-transcripts-analyzer-backend.azurewebsites.net"
+      : process.env.NEXT_PUBLIC_API_URL ||
+        "https://ai-transcripts-analyzer-backend.azurewebsites.net",
   };
 
+  console.log("Layout - Environment:", process.env.NODE_ENV);
   console.log("Layout - Runtime config:", runtimeConfig);
 
   return (

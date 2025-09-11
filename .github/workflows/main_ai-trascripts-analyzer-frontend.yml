@@ -33,13 +33,8 @@ jobs:
 
       - name: Archive production build
         run: |
-          # Create build directory with standalone structure
-          mkdir build
-          cp -R .next/standalone/* build/
-          # Copy static files that were prepared by our build script
-          cp -R .next/standalone/.next build/.next
-          cp -R .next/standalone/public build/public
-          cd build && zip -r ../build.zip .
+          # Use the complete standalone directory as is
+          cd .next/standalone && zip -r ../../build.zip .
         shell: bash
 
       - name: Upload artifact for deployment job

@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies and build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_API_URL: "https://ai-transcripts-analyzer-backend.azurewebsites.net"
           NODE_ENV: production
         run: |
           npm ci
@@ -77,6 +77,3 @@ jobs:
           app-name: "ai-trascripts-analyzer-frontend"
           slot-name: "Production"
           package: .
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NODE_ENV: production

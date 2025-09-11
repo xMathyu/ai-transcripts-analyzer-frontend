@@ -45,6 +45,26 @@ A cutting-edge, enterprise-grade web interface for analyzing and searching trans
 - Loading and error states
 - Optimized light mode
 
+## 🏗️ Architecture
+
+
+### Application Architecture
+![Architecture Overview](./docs/images/frontend-diagram.png)
+
+The application follows a modern React/Next.js architecture with clear separation of concerns:
+
+- **Presentation Layer**: React components with TypeScript and Tailwind CSS
+- **Business Logic Layer**: Custom React hooks and context providers
+- **Services Layer**: API communication with the Azure-hosted backend
+- **Configuration Layer**: Runtime configuration for different environments
+
+**Key Architecture Principles:**
+- **Component-based**: Modular, reusable UI components
+- **Hook-based State Management**: Custom hooks for business logic
+- **Service Layer**: Clean API abstraction
+- **Type Safety**: Full TypeScript coverage
+- **Responsive Design**: Mobile-first approach
+
 ## Technologies Used
 
 - **Frontend**: Next.js 15, React 19, TypeScript
@@ -52,6 +72,8 @@ A cutting-edge, enterprise-grade web interface for analyzing and searching trans
 - **State**: Custom React Hooks
 - **HTTP**: Native Fetch API
 - **Linting**: ESLint with Next.js configuration
+- **Icons**: Lucide React
+- **Build**: Turbopack for faster development
 
 ## Installation
 

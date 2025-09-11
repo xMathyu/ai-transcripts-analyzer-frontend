@@ -37,7 +37,8 @@ export default function Dashboard() {
                 Welcome back! 👋
               </h1>
               <p className="text-lg text-muted-foreground mb-4">
-                Your AI-powered transcript analysis dashboard is ready to go.
+                Your Entel AI-powered transcript analysis dashboard is ready to
+                go.
               </p>
               <div className="flex items-center space-x-4">
                 <Badge variant="success" className="px-3 py-1">
